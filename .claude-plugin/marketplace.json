@@ -7,14 +7,14 @@
   },
   "metadata": {
     "description": "Security and compliance plugins for Claude Code by Sherry Yuan",
-    "version": "1.0.0"
+    "version": "1.1.0"
   },
   "plugins": [
     {
       "name": "security-compliance",
       "source": "./plugins/security-compliance",
-      "description": "Identity-architecture validator for IAM, CIAM, RBAC, and workload-identity designs — maps OIDC/OAuth/SAML/SCIM/ephemeral-credential patterns to identity controls across 11 regulatory frameworks.",
-      "version": "1.0.0",
+      "description": "Identity-architecture validator for IAM, CIAM, RBAC, and workload-identity designs — maps OIDC/OAuth/SAML/SCIM/ephemeral-credential patterns to identity controls across 11 regulatory frameworks. Ships an /edit-docx command (apply-template + accept-changes) with rollback-safe versioned promote and per-Word-feature fidelity checks.",
+      "version": "1.1.0",
       "author": {
         "name": "Sherry Yuan",
         "url": "https://github.com/sherryyuan678"

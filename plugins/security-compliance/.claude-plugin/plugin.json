@@ -1,7 +1,7 @@
 {
   "name": "security-compliance",
-  "version": "1.0.0",
-  "description": "Identity-architecture validator for IAM, CIAM, RBAC, and workload-identity designs — maps OIDC/OAuth/SAML/SCIM/ephemeral-credential patterns to identity controls across 11 regulatory frameworks.",
+  "version": "1.1.0",
+  "description": "Identity-architecture validator for IAM, CIAM, RBAC, and workload-identity designs — maps OIDC/OAuth/SAML/SCIM/ephemeral-credential patterns to identity controls across 11 regulatory frameworks. Ships an /edit-docx command (apply-template + accept-changes) with rollback-safe versioned promote and per-Word-feature fidelity checks.",
   "author": {
     "name": "Sherry Yuan",
     "email": "sherryliyuan@gmail.com",
