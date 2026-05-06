@@ -26,7 +26,7 @@ In the Claude Desktop app:
 
 After install, just say `/spot-check <scenario>` — both
 the markdown report and the DOCX summary will appear under
-`.compliance-reports/`.
+`Scratchpad` in the right sidebar.
 
 Copy/paste this example to try it immediately:
 
