@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-4-5-20250929",
+  "max_tokens": 2600,
+  "strict": true,
+  "suite_mode": "all",
+  "suite_path": "tests/suites/suite_01_jurisdictional_applicability.jsonl",
+  "output_dir": "tests/results",
+  "notes": "Set ANTHROPIC_API_KEY in your environment before running scripts/run_eval.py"
+}

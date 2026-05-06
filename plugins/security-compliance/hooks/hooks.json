@@ -1,0 +1,43 @@
+{
+  "description": "Security compliance validation hooks: validates report outputs, auto-resolves framework versions, and checks required dependencies",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/hooks/check_dependencies.py",
+            "timeout": 90,
+            "statusMessage": "Checking security-compliance dependencies..."
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/hooks/validate_compliance_output.py",
+            "timeout": 10,
+            "statusMessage": "Validating compliance output..."
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "(?i)(compliance|gdpr|hipaa|soc.?2|pci.?dss|ccpa|cpra|dora|iso.?27001|nist|audit|regulatory|eu.?ai.?act|cmmc|fedramp)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/hooks/resolve_frameworks.py",
+            "timeout": 10,
+            "statusMessage": "Checking framework versions..."
+          }
+        ]
+      }
+    ]
+  }
+}

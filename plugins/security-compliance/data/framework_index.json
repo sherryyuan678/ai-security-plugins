@@ -1,0 +1,252 @@
+{
+  "generated_at": "2026-05-04",
+  "schema_version": "1.2",
+  "schema_notes": "Each framework key maps to an array of version objects. Add new versions as additional array entries; select_framework_versions.py resolves the correct version for a given as-of date. v1.2 adds optional iam_control_family_refs at the framework-level — clauses indexed by the iam_control_families taxonomy below. The security-auditor agent reads this block directly (cat the JSON or query with python json.load) when scoping IAM/CIAM/RBAC/workload-identity controls per framework, so clause anchors stay co-located with version data instead of drifting in agent prose.",
+  "iam_control_families": {
+    "authentication": "Verifying the asserted identity of a user, device, service, or workload (proof-of-possession, multi-factor, FIDO2/WebAuthn, mTLS, OIDC ID-token verification).",
+    "authorization": "Determining what a verified identity is permitted to do (RBAC, ABAC, ReBAC, OAuth scopes, custom role grammars, policy engines such as OPA, HCL-defined roles).",
+    "identifier_management": "Issuing, rotating, retiring identifiers for humans and non-humans (user IDs, service-principal IDs, SPIFFE IDs, machine identifiers).",
+    "credential_lifecycle": "Lifecycle of credentials and tokens (issuance, rotation, expiry, revocation, ephemerality, audience binding, key management).",
+    "session_management": "Session establishment, revalidation, idle/absolute timeout, binding to device/IP/risk-signal, logout/single-logout flows.",
+    "joiner_mover_leaver": "Provisioning/deprovisioning of access on hire, role change, and termination (SCIM, IGA platforms, automated deprovisioning).",
+    "access_review": "Periodic recertification of access, segregation-of-duties analysis, orphan-account detection, privileged-access attestation.",
+    "machine_identity": "Identity for non-human principals (services, workloads, agents) with workload-identity federation, ephemeral credentials, and audience-bound tokens — the modern alternative to static secrets.",
+    "federation": "Cross-domain identity assertion (SAML 2.0, OIDC federation, SCIM provisioning, B2B partner identity, OIDC-based workload-identity federation between cloud accounts/regions).",
+    "audit_and_monitoring": "Identity-event logging, anomaly detection, SIEM/IDP integration, audit-trail integrity for all of the above."
+  },
+  "frameworks": {
+    "GDPR": [
+      {
+        "version": "Regulation (EU) 2016/679",
+        "effective_date": "2018-05-25",
+        "publication_date": "2016-05-04",
+        "source_url": "https://eur-lex.europa.eu/eli/reg/2016/679/oj",
+        "status": "active",
+        "iam_control_family_refs": {
+          "authentication": ["Art. 32(1)(b) Confidentiality, integrity, availability — appropriate technical measures including authentication"],
+          "authorization": ["Art. 32(4) Authorized access only", "Art. 25 Data protection by design and by default — least-privilege defaults"],
+          "identifier_management": ["Art. 5(1)(c) Data minimisation — applies to identifier scope"],
+          "credential_lifecycle": ["Art. 32(1)(a) Pseudonymisation and encryption of personal data"],
+          "session_management": ["Art. 32(1)(b) Confidentiality of processing"],
+          "joiner_mover_leaver": ["Art. 32(4) Persons authorised to process personal data — implies controlled access lifecycle"],
+          "access_review": ["Art. 32(1)(d) Process for regularly testing, assessing, and evaluating effectiveness"],
+          "machine_identity": ["Art. 32(1)(b) — applies to systems and services processing personal data, not only humans"],
+          "federation": ["Art. 28 Processor obligations — including controller-processor identity boundaries", "Art. 32(2) Risks from accidental or unlawful access"],
+          "audit_and_monitoring": ["Art. 30 Records of processing activities", "Art. 33 Notification of personal data breach"]
+        }
+      }
+    ],
+    "HIPAA": [
+      {
+        "version": "HIPAA Privacy/Security/Breach Rules",
+        "effective_date": "2005-04-20",
+        "publication_date": "2000-12-28",
+        "source_url": "https://www.hhs.gov/hipaa/index.html",
+        "status": "active",
+        "iam_control_family_refs": {
+          "authentication": ["§164.312(d) Person or entity authentication", "§164.308(a)(5)(ii)(D) Password management"],
+          "authorization": ["§164.308(a)(4) Information access management", "§164.312(a)(1) Access control"],
+          "identifier_management": ["§164.312(a)(2)(i) Unique user identification"],
+          "credential_lifecycle": ["§164.308(a)(5)(ii)(D) Password management"],
+          "session_management": ["§164.312(a)(2)(iii) Automatic logoff"],
+          "joiner_mover_leaver": ["§164.308(a)(3)(ii)(B) Workforce clearance procedure", "§164.308(a)(3)(ii)(C) Termination procedures"],
+          "access_review": ["§164.308(a)(4)(ii)(C) Access establishment and modification — periodic review"],
+          "machine_identity": ["§164.312(a)(2)(i) Unique user identification (interpreted to apply to system identities)"],
+          "federation": ["§164.314 Organizational requirements — Business Associate Agreements covering federated/third-party access"],
+          "audit_and_monitoring": ["§164.312(b) Audit controls", "§164.308(a)(1)(ii)(D) Information system activity review"]
+        }
+      }
+    ],
+    "SOC2": [
+      {
+        "version": "AICPA Trust Services Criteria 2017 (with periodic updates)",
+        "effective_date": "2017-01-01",
+        "publication_date": "2017-01-01",
+        "source_url": "https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2",
+        "status": "active",
+        "iam_control_family_refs": {
+          "authentication": ["CC6.1 Logical access controls — authentication"],
+          "authorization": ["CC6.1 Logical access controls — authorization", "CC6.3 Authorization of access to systems"],
+          "identifier_management": ["CC6.2 Registration/authorization of new internal/external users"],
+          "credential_lifecycle": ["CC6.1 Logical access controls — credentials"],
+          "session_management": ["CC6.1 Logical access controls — session"],
+          "joiner_mover_leaver": ["CC6.2 Registration/authorization of new users", "CC6.3 Authorization changes — including termination"],
+          "access_review": ["CC6.3 Periodic reviews of access"],
+          "machine_identity": ["CC6.1 Logical access — service accounts and system identities", "CC6.7 Transmission, movement, and removal of information"],
+          "federation": ["CC6.7 Transmission, movement, and removal of information", "CC9.2 Vendor and business partner risk"],
+          "audit_and_monitoring": ["CC7.2 Detection and monitoring of security events", "CC7.3 Evaluation of security events"]
+        }
+      }
+    ],
+    "PCI_DSS": [
+      {
+        "version": "PCI DSS v4.0",
+        "effective_date": "2022-03-31",
+        "publication_date": "2022-03-31",
+        "source_url": "https://www.pcisecuritystandards.org/document_library/",
+        "status": "active",
+        "iam_control_family_refs": {
+          "authentication": ["Req. 8.3 Strong authentication for all users", "Req. 8.4 MFA for all access into the CDE", "Req. 8.5 MFA system controls"],
+          "authorization": ["Req. 7.1 Access control by job function — need-to-know", "Req. 7.2 Access control system enforces least privilege", "Req. 7.3 Access control by job function defaults to deny-all"],
+          "identifier_management": ["Req. 8.2 User identification — unique user IDs"],
+          "credential_lifecycle": ["Req. 8.3.6 Password/passphrase complexity", "Req. 8.3.9 Password/passphrase rotation requirements", "Req. 8.6 Application/system accounts — credentials managed"],
+          "session_management": ["Req. 8.2.8 Session re-authentication after idle timeout"],
+          "joiner_mover_leaver": ["Req. 8.2.4 User account/credential lifecycle managed", "Req. 8.2.6 Inactive accounts removed/disabled within 90 days"],
+          "access_review": ["Req. 7.2.4 Access privileges reviewed every 6 months"],
+          "machine_identity": ["Req. 8.6 Use of application/system accounts and associated authentication factors"],
+          "federation": ["Req. 8.3.2 Authentication factors protected during transmission and storage", "Req. 12.8 Maintain policies/procedures for managing service providers"],
+          "audit_and_monitoring": ["Req. 10.2 Audit logs for system components", "Req. 10.3 Audit log entries record user identification + event"]
+        }
+      }
+    ],
+    "ISO_27001": [
+      {
+        "version": "ISO/IEC 27001:2022",
+        "effective_date": "2022-10-25",
+        "publication_date": "2022-10-25",
+        "source_url": "https://www.iso.org/standard/27001",
+        "status": "active",
+        "iam_control_family_refs": {
+          "authentication": ["A.5.17 Authentication information", "A.8.5 Secure authentication"],
+          "authorization": ["A.5.15 Access control", "A.5.18 Access rights"],
+          "identifier_management": ["A.5.16 Identity management"],
+          "credential_lifecycle": ["A.5.17 Authentication information", "A.8.24 Use of cryptography"],
+          "session_management": ["A.8.5 Secure authentication"],
+          "joiner_mover_leaver": ["A.5.16 Identity management", "A.5.18 Access rights", "A.6.5 Termination/change of employment responsibilities"],
+          "access_review": ["A.5.18 Access rights", "A.5.36 Compliance with policies, rules, and standards"],
+          "machine_identity": ["A.5.16 Identity management", "A.8.4 Access to source code"],
+          "federation": ["A.5.15 Access control", "A.5.21 Information security in the ICT supply chain"],
+          "audit_and_monitoring": ["A.8.15 Logging", "A.8.16 Monitoring activities"]
+        }
+      }
+    ],
+    "NIST_CSF": [
+      {
+        "version": "NIST Cybersecurity Framework 2.0",
+        "effective_date": "2024-02-26",
+        "publication_date": "2024-02-26",
+        "source_url": "https://www.nist.gov/cyberframework",
+        "status": "active",
+        "iam_control_family_refs": {
+          "authentication": ["PR.AA-01", "PR.AA-02", "PR.AA-03", "NIST 800-53 IA-2", "NIST 800-53 IA-2(1)", "NIST 800-53 IA-2(2)", "NIST 800-53 IA-8"],
+          "authorization": ["PR.AA-05", "NIST 800-53 AC-3", "NIST 800-53 AC-6", "NIST 800-53 AC-6(7)"],
+          "identifier_management": ["NIST 800-53 IA-4", "NIST 800-53 IA-12"],
+          "credential_lifecycle": ["NIST 800-53 IA-5", "NIST 800-53 IA-5(1)", "NIST 800-53 IA-5(2)"],
+          "session_management": ["NIST 800-53 AC-12", "NIST 800-53 SC-23"],
+          "joiner_mover_leaver": ["NIST 800-53 AC-2", "NIST 800-53 AC-2(3)"],
+          "access_review": ["NIST 800-53 AC-2(7)", "NIST 800-53 AC-6(7)"],
+          "machine_identity": ["NIST 800-53 IA-9", "NIST 800-53 IA-3"],
+          "federation": ["NIST 800-53 IA-8", "NIST 800-63C (assertions and federation)"],
+          "audit_and_monitoring": ["DE.AE-02", "DE.CM-01", "NIST 800-53 AU-2", "NIST 800-53 AU-12"]
+        }
+      }
+    ],
+    "CCPA_CPRA": [
+      {
+        "version": "CCPA as amended by CPRA regulations",
+        "effective_date": "2023-01-01",
+        "publication_date": "2020-11-03",
+        "source_url": "https://cppa.ca.gov/regulations/",
+        "status": "active",
+        "iam_control_family_refs": {
+          "_note": "CCPA/CPRA does not enumerate identity-control families; Cal. Civ. Code §1798.81.5 Reasonable security is the umbrella anchor for authn/authz/identifier/credential/session/JML/access-review/machine-identity/audit obligations. Specific clauses below cover where the statute is more explicit.",
+          "authentication": ["Cal. Civ. Code §1798.81.5 Reasonable security — interpreted to require authentication of access to consumer data"],
+          "authorization": ["§1798.100(d) Limit collection/use/retention to what is reasonably necessary — least privilege over consumer data"],
+          "identifier_management": ["Cal. Civ. Code §1798.81.5 Reasonable security — applies to identifier scope of consumer-data systems"],
+          "credential_lifecycle": ["Cal. Civ. Code §1798.81.5 Reasonable security — applies to credential management for consumer-data systems"],
+          "session_management": ["Cal. Civ. Code §1798.81.5 Reasonable security — applies to session controls"],
+          "joiner_mover_leaver": ["Cal. Civ. Code §1798.81.5 Reasonable security — applies to access lifecycle"],
+          "access_review": ["Cal. Civ. Code §1798.81.5 Reasonable security — applies to periodic review"],
+          "machine_identity": ["Cal. Civ. Code §1798.81.5 Reasonable security — applies to non-human principals accessing consumer data"],
+          "federation": ["§1798.140(ag) Service provider definition", "§1798.100(d) Contracted access to personal information"],
+          "audit_and_monitoring": ["§1798.82 Breach notification"]
+        }
+      }
+    ],
+    "DORA": [
+      {
+        "version": "Regulation (EU) 2022/2554",
+        "effective_date": "2025-01-17",
+        "publication_date": "2022-12-27",
+        "source_url": "https://eur-lex.europa.eu/eli/reg/2022/2554/oj",
+        "status": "active",
+        "iam_control_family_refs": {
+          "authentication": ["Art. 9(4)(c) Strong authentication mechanisms and protective measures of cryptographic keys"],
+          "authorization": ["Art. 9(4)(c)-(d) Logical access (principle of least privilege, need-to-know) and strong authentication"],
+          "identifier_management": ["Art. 9(4)(c) Logical access controls covering identity lifecycle"],
+          "credential_lifecycle": ["Art. 9(4)(c) Strong authentication and protective measures of cryptographic keys", "Art. 9(4)(d) Sound and comprehensive ICT operations security"],
+          "session_management": ["Art. 9(4)(c)-(d) Logical access controls including session protections"],
+          "joiner_mover_leaver": ["Art. 9(4)(c) Logical access controls — joiner/mover/leaver implied by least-privilege requirement", "Art. 16 Simplified ICT risk management framework — access governance"],
+          "access_review": ["Art. 6(8) ICT risk management — periodic review", "Art. 9(4)(c) Logical access controls — periodic recertification"],
+          "machine_identity": ["Art. 9(4)(c) Logical access for systems/services", "Art. 28 ICT third-party risk — programmatic/system access from third parties"],
+          "federation": ["Art. 28 ICT third-party arrangements — general principles", "Art. 30 Key contractual provisions", "Art. 31 Critical ICT third-party providers"],
+          "audit_and_monitoring": ["Art. 17-23 ICT-related incident management, classification, and reporting", "Art. 9(4)(d) Sound and comprehensive ICT operations security — monitoring/logging"]
+        }
+      }
+    ],
+    "EU_AI_ACT": [
+      {
+        "version": "Regulation (EU) 2024/1689",
+        "effective_date": "2024-08-01",
+        "publication_date": "2024-07-12",
+        "source_url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj",
+        "status": "active",
+        "notes": "Phased application dates apply by obligation category.",
+        "iam_control_family_refs": {
+          "authentication": ["Art. 15 Accuracy, robustness, cybersecurity — including authentication for high-risk AI system access"],
+          "authorization": ["Art. 14 Human oversight — authorisation boundaries for human-in-the-loop", "Art. 15 Cybersecurity — least-privilege access to high-risk AI systems"],
+          "identifier_management": ["Art. 12 Record-keeping — identifiers for traceability"],
+          "credential_lifecycle": ["Art. 15 Cybersecurity — credential governance as part of robustness"],
+          "session_management": ["Art. 14 Human oversight — session-level intervention capability", "Art. 15 Cybersecurity"],
+          "joiner_mover_leaver": ["Art. 14 Human oversight — qualified-personnel access lifecycle"],
+          "access_review": ["Art. 17 Quality management system — periodic review of access and roles", "Art. 9 Risk management system"],
+          "machine_identity": ["Art. 15 Cybersecurity — covers system identities accessing high-risk AI components", "Art. 22 Authorised representative obligations"],
+          "federation": ["Art. 25 Obligations along the AI value chain — provider/deployer/importer identity boundaries"],
+          "audit_and_monitoring": ["Art. 12 Record-keeping (automatic logs)", "Art. 19 Automatically generated logs", "Art. 26 Obligations of deployers — including monitoring"]
+        }
+      }
+    ],
+    "CMMC": [
+      {
+        "version": "CMMC 2.0 Rulemaking Baseline",
+        "effective_date": "2024-11-10",
+        "publication_date": "2024-11-10",
+        "source_url": "https://www.acq.osd.mil/cmmc/",
+        "status": "conditional",
+        "iam_control_family_refs": {
+          "authentication": ["IA.L2-3.5.3 Use multi-factor authentication for local and network access to privileged accounts", "IA.L2-3.5.7 Enforce a minimum password complexity"],
+          "authorization": ["AC.L1-b.1.i Limit information system access to authorized users", "AC.L2-3.1.5 Employ the principle of least privilege"],
+          "identifier_management": ["IA.L1-b.1.v Identify information system users, processes, and devices"],
+          "credential_lifecycle": ["IA.L2-3.5.10 Store and transmit only cryptographically-protected passwords", "IA.L2-3.5.11 Obscure feedback of authentication information"],
+          "session_management": ["AC.L2-3.1.10 Use session lock with pattern-hiding displays", "AC.L2-3.1.11 Terminate user sessions automatically"],
+          "joiner_mover_leaver": ["AC.L2-3.1.9 Provide privacy and security notices consistent with applicable rules"],
+          "access_review": ["AC.L2-3.1.7 Prevent non-privileged users from executing privileged functions and audit"],
+          "machine_identity": ["IA.L1-b.1.vi Authenticate (or verify) the identities of users, processes, or devices"],
+          "federation": ["AC.L2-3.1.20 Verify and control connections to external information systems"],
+          "audit_and_monitoring": ["AU.L2-3.3.1 Create and retain system audit logs and records", "AU.L2-3.3.5 Correlate audit record review for indications of inappropriate activity"]
+        }
+      }
+    ],
+    "FedRAMP": [
+      {
+        "version": "FedRAMP Rev 5 baseline program guidance",
+        "effective_date": "2023-01-01",
+        "publication_date": "2023-01-01",
+        "source_url": "https://www.fedramp.gov/",
+        "status": "conditional",
+        "iam_control_family_refs": {
+          "authentication": ["NIST 800-53 IA-2 Identification and authentication (organizational users)", "IA-2(1) Network access to privileged accounts — MFA", "IA-2(2) Network access to non-privileged accounts — MFA"],
+          "authorization": ["AC-3 Access enforcement", "AC-6 Least privilege", "AC-6(7) Review of user privileges"],
+          "identifier_management": ["IA-4 Identifier management", "IA-12 Identity proofing"],
+          "credential_lifecycle": ["IA-5 Authenticator management", "IA-5(1) Password-based authentication", "IA-5(2) PKI-based authentication"],
+          "session_management": ["AC-12 Session termination", "SC-23 Session authenticity"],
+          "joiner_mover_leaver": ["AC-2 Account management", "AC-2(3) Disable accounts"],
+          "access_review": ["AC-2(7) Privileged user accounts — periodic review", "AC-6(7) Review of user privileges — periodic"],
+          "machine_identity": ["IA-9 Service identification and authentication", "IA-3 Device identification and authentication"],
+          "federation": ["IA-8 Identification and authentication (non-organizational users)", "NIST 800-63C Federation and assertions"],
+          "audit_and_monitoring": ["AU-2 Event logging", "AU-12 Audit record generation"]
+        }
+      }
+    ]
+  }
+}

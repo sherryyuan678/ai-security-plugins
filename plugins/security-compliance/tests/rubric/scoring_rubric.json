@@ -1,0 +1,41 @@
+{
+  "name": "security-compliance-v2-eval-rubric",
+  "version": "2.0",
+  "dimensions": {
+    "applicability_accuracy": 0.20,
+    "factual_correctness": 0.20,
+    "actionability": 0.18,
+    "adversarial_robustness": 0.15,
+    "control_deduplication": 0.12,
+    "scope_discipline": 0.10,
+    "efficiency": 0.05
+  },
+  "thresholds": {
+    "minimum_pass_rate": 0.80,
+    "minimum_avg_assertion_score": 0.85,
+    "minimum_weighted_dimension_score": 0.85,
+    "minimum_dimension_score": 0.75,
+    "minimum_dimension_coverage_cases": 4,
+    "minimum_total_cases": 30,
+    "minimum_cases_per_suite": 5,
+    "minimum_judge_semantic_score": 0.80
+  },
+  "judge": {
+    "model": "claude-opus-4-6",
+    "blend_weight": 0.50,
+    "description": "LLM-as-judge semantic scoring using Opus 4.6 for factual and qualitative evaluation. Blend weight controls assertion vs judge mix (0.5 = equal weight)."
+  },
+  "decision_rule": {
+    "adopt_if": [
+      "pass_rate >= 0.80",
+      "avg_assertion_score >= 0.85",
+      "weighted_dimension_score >= 0.85 (blended when judge enabled)",
+      "each_dimension_score >= 0.75 with at least 4 cases per dimension",
+      "total_cases >= 30",
+      "each_suite_cases >= 5",
+      "no severe factual regressions",
+      "judge_semantic_score >= 0.80 (when judge enabled)",
+      "zero hallucination flags in adversarial suite"
+    ]
+  }
+}

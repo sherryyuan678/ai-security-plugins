@@ -1,0 +1,18 @@
+__pycache__/
+*.pyc
+*.pyo
+tests/results/
+.compliance-check/
+.compliance-reports/
+.ipynb_checkpoints/
+
+# Secrets and credentials
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+*.cert
+secrets/
+credentials.*

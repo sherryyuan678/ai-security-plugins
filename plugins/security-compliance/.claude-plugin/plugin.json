@@ -1,0 +1,30 @@
+{
+  "name": "security-compliance",
+  "version": "1.0.0",
+  "description": "Identity-architecture validator for IAM, CIAM, RBAC, and workload-identity designs — maps OIDC/OAuth/SAML/SCIM/ephemeral-credential patterns to identity controls across 11 regulatory frameworks.",
+  "author": {
+    "name": "Sherry Yuan",
+    "email": "sherryliyuan@gmail.com",
+    "url": "https://github.com/sherryyuan678"
+  },
+  "homepage": "https://github.com/sherryyuan678/ai-security-plugins",
+  "repository": "https://github.com/sherryyuan678/ai-security-plugins",
+  "license": "MIT",
+  "keywords": [
+    "iam",
+    "ciam",
+    "rbac",
+    "oauth",
+    "oidc",
+    "saml",
+    "scim",
+    "workload-identity",
+    "ephemeral-credentials",
+    "federation",
+    "compliance",
+    "gdpr",
+    "soc2",
+    "iso-27001",
+    "dora"
+  ]
+}

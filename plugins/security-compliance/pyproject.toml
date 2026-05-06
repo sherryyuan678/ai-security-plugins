@@ -1,0 +1,18 @@
+[project]
+name = "security-compliance-plugin"
+version = "0.0.0"
+description = "Internal — not published. Holds dev-time test config."
+requires-python = ">=3.12"
+
+[project.optional-dependencies]
+dev = [
+    "python-docx>=1.1",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["scripts", "hooks"]
+addopts = "-q"
+markers = [
+    "integration: end-to-end contract validation; touches local plugin tree only",
+]
