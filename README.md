@@ -30,8 +30,13 @@ the markdown report and the DOCX summary will appear under
 
 Example:
 
-```text
-/spot-check US California-based e-commerce startup planning to integrate {PAYMENT_PROVIDER} as our primary payment method. We will also accept direct credit card payments via {PAYMENT_PROCESSOR} as a fallback. We serve US customers only, including California. No EU customers, no healthcare data, no AI features, no government contracts. 20-person team. --as-of 2026-02-17 --jurisdictions US_CA --industry ecommerce
+```
+/spot-check US California-based e-commerce startup planning to integrate
+{PAYMENT_PROVIDER} as our primary payment method. We will also accept direct
+credit card payments via {PAYMENT_PROCESSOR} as a fallback. We serve US
+customers only, including California. No EU customers, no healthcare data,
+no AI features, no government contracts. 20-person team. --as-of 2026-02-17
+--jurisdictions US_CA --industry ecommerce
 ```
 
 ![Adding the plugin marketplace in Claude Cowork](./plugins/security-compliance/docs/claude-cowork-install.png)
