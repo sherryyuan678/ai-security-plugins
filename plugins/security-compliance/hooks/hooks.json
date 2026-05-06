@@ -24,6 +24,17 @@
             "statusMessage": "Validating compliance output..."
           }
         ]
+      },
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/hooks/validate_edited_docx.py",
+            "timeout": 15,
+            "statusMessage": "Validating edited DOCX..."
+          }
+        ]
       }
     ],
     "UserPromptSubmit": [

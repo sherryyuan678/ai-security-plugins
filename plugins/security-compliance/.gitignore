@@ -16,3 +16,6 @@ tests/results/
 *.cert
 secrets/
 credentials.*
+
+# runbook-05 artifacts (auto-generated, do not commit)
+.runbook-05-artifacts/

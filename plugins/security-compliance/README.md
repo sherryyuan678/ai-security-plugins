@@ -248,6 +248,18 @@ Restart Claude Code after installation. A reminder will appear at session start 
 
 - **Claude Code 1.0.33 or later**
 - **Python 3.7+** on PATH (for validation hooks; the plugin works without Python, but hooks won't be active)
+- **LibreOffice (`soffice`)** — required only for `/edit-docx --accept-changes`. macOS: `brew install --cask libreoffice`. Linux: `apt install -y libreoffice`. The plugin's `SessionStart` hook probes for it and emits an install reminder if missing.
+
+### Cowork environment setup
+
+Cloud sessions (Claude Cowork) start from a fresh Ubuntu 24.04 VM that does
+**not** include LibreOffice or the `gh` CLI by default. The plugin ships
+`scripts/_cowork_setup.sh` — paste it into your Cowork environment's **Setup
+script** field (claude.ai/code → environment selector → settings icon →
+Setup script) so the cloud sessions provision LibreOffice + `gh` + Python deps
+once, then cache the result for subsequent sessions. The script runs `apt
+install -y libreoffice gh` plus `pip install python-docx pytest lxml`.
+Completes in ~3-4 minutes on first run; cached afterward.
 
 ---
 
