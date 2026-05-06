@@ -27,8 +27,10 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 import subprocess
 import sys
+from pathlib import Path
 from typing import Any
 
 PROBE_TIMEOUT_SECONDS = 3
@@ -149,13 +151,94 @@ def emit(message: str) -> None:
     sys.stdout.write(json.dumps({"systemMessage": message}) + "\n")
 
 
+SOFFICE_MAC_CANONICAL = "/Applications/LibreOffice.app/Contents/MacOS/soffice"
+SOFFICE_LINUX_CANONICAL = "/usr/bin/soffice"
+SOFFICE_BREW = "/opt/homebrew/bin/soffice"
+SOFFICE_MIN_VERSION = (7, 5)
+
+
+def _probe_soffice() -> dict[str, Any]:
+    """Probe for soffice (LibreOffice). Soft-fail with install hints.
+
+    The edit-docx --accept-changes path requires soffice >= 7.5 (the
+    --accept-changes flag stabilized in 7.5). On macOS, soffice may live
+    at /Applications/LibreOffice.app/... or /opt/homebrew/bin/soffice; on
+    Linux it is /usr/bin/soffice. Returns {ok, path, version, message}.
+    """
+    path = shutil.which("soffice")
+    if path is None:
+        for cand in (SOFFICE_MAC_CANONICAL, SOFFICE_LINUX_CANONICAL, SOFFICE_BREW):
+            if Path(cand).exists():
+                path = cand
+                break
+    if path is None:
+        if sys.platform == "darwin":
+            install = "brew install --cask libreoffice"
+        else:
+            install = "apt-get install -y libreoffice"
+        return {
+            "ok": False,
+            "path": None,
+            "version": None,
+            "message": (
+                "security-compliance: soffice (LibreOffice) not found; "
+                f"--accept-changes will fail. Install with: {install}"
+            ),
+        }
+    try:
+        proc = subprocess.run(
+            [path, "--version"],
+            capture_output=True,
+            text=True,
+            timeout=10,
+            check=False,
+            cwd=SAFE_CWD,
+            env=safe_subprocess_env(),
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        return {
+            "ok": False,
+            "path": path,
+            "version": None,
+            "message": f"security-compliance: soffice version probe failed: {exc}",
+        }
+    version_line = (proc.stdout or "").strip().splitlines()[:1]
+    version_str = version_line[0] if version_line else ""
+    parts = version_str.split()
+    version_tuple: tuple[int, ...] = ()
+    for part in parts:
+        digits = part.split(".")
+        if len(digits) >= 2 and all(d.isdigit() for d in digits[:2]):
+            version_tuple = (int(digits[0]), int(digits[1]))
+            break
+    if version_tuple and version_tuple < SOFFICE_MIN_VERSION:
+        return {
+            "ok": False,
+            "path": path,
+            "version": version_str,
+            "message": (
+                f"security-compliance: soffice {version_str} is below "
+                f"{'.'.join(str(v) for v in SOFFICE_MIN_VERSION)}; "
+                "--accept-changes may behave inconsistently."
+            ),
+        }
+    return {
+        "ok": True,
+        "path": path,
+        "version": version_str,
+        "message": f"security-compliance: soffice OK ({version_str})",
+    }
+
+
 def main() -> None:
     """Probe-then-install. Always exits 0."""
     try:
-        if python_docx_available():
-            return
-        result = install_python_docx()
-        emit(result["message"])
+        if not python_docx_available():
+            result = install_python_docx()
+            emit(result["message"])
+        soffice_result = _probe_soffice()
+        if not soffice_result["ok"]:
+            emit(soffice_result["message"])
     except Exception as exc:
         try:
             emit("security-compliance dependency check error: %s" % str(exc))
