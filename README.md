@@ -24,7 +24,7 @@ In the Claude Desktop app:
 6. Once the marketplace is added, install **security-compliance** from the
    marketplace's plugin list.
 
-After install, just say `/security-compliance:spot-check <scenario>` — both
+After install, just say `/spot-check <scenario>` — both
 the markdown report and the DOCX summary will appear under
 `.compliance-reports/`.
 
