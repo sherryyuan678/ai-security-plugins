@@ -1,0 +1,712 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Security Compliance Plugin — Sherry Yuan · DigitalOcean PM interview prototype</title>
+<meta name="description" content="A design-time compliance gap analysis plugin for Claude Co-Work, built as a one-day prototype for the DigitalOcean Director of PM conversation." />
+<link rel="preconnect" href="https://api.fontshare.com" />
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&f[]=jetbrains-mono@400,500&display=swap" />
+<link rel="stylesheet" href="styles.css" />
+<link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230b1a2b'/><path d='M16 7 L24 11 V17 C24 21.5 20.5 24.5 16 26 C11.5 24.5 8 21.5 8 17 V11 Z' fill='none' stroke='%2300d4ff' stroke-width='2.2'/></svg>" />
+</head>
+<body>
+
+<header class="topbar" role="banner">
+  <a href="#cover" class="brand" aria-label="Security Compliance Plugin home">
+    <svg class="logo" viewBox="0 0 32 32" aria-hidden="true">
+      <rect width="32" height="32" rx="6" fill="#0b1a2b"/>
+      <path d="M16 7 L24 11 V17 C24 21.5 20.5 24.5 16 26 C11.5 24.5 8 21.5 8 17 V11 Z" fill="none" stroke="#00d4ff" stroke-width="2.2"/>
+    </svg>
+    <span class="brand-text">
+      <strong>security-compliance</strong>
+      <em>plugin · Claude Co-Work</em>
+    </span>
+  </a>
+
+  <nav class="topnav" aria-label="Slide navigation">
+    <button class="navbtn" id="tocBtn" aria-haspopup="true" aria-expanded="false" aria-controls="toc">Slides</button>
+    <a class="navbtn ghost" href="https://github.com/sherryyuan678/ai-security-plugins/tree/main/plugins/security-compliance" target="_blank" rel="noopener">Repo ↗</a>
+    <a class="navbtn primary" href="assets/security-compliance-plugin.zip" download>Download .zip</a>
+  </nav>
+</header>
+
+<aside id="toc" class="toc" aria-label="Slide table of contents" hidden>
+  <h2>Story rail</h2>
+  <ol id="tocList"></ol>
+  <p class="toc-hint">← → arrows · click any row to jump · <kbd>T</kbd> toggles this rail</p>
+</aside>
+
+<main class="deck" id="deck" aria-live="polite">
+
+  <!-- 0. COVER -->
+  <section class="slide cover" id="cover" data-title="Cover" aria-labelledby="cover-h">
+    <div class="cover-grid">
+      <div class="cover-mark">
+        <svg viewBox="0 0 120 140" aria-hidden="true">
+          <path d="M60 10 L110 30 V70 C110 100 88 122 60 132 C32 122 10 100 10 70 V30 Z"
+                fill="none" stroke="#00d4ff" stroke-width="2.5"/>
+          <path d="M60 26 L94 40 V70 C94 92 79 108 60 116 C41 108 26 92 26 70 V40 Z"
+                fill="rgba(0,212,255,0.06)" stroke="#3a5b80" stroke-width="1.2"/>
+          <path d="M44 72 L56 84 L80 56" stroke="#00d4ff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="cover-text">
+        <p class="eyebrow">Built for the DigitalOcean Director of PM conversation · Sherry Yuan</p>
+        <h1 id="cover-h">Security<br/>Compliance Plugin</h1>
+        <p class="subtitle">Design-time compliance gap analysis for Claude Co-Work — built for the DigitalOcean founder ICP who didn’t buy DO for compliance, but now needs an answer this week.</p>
+        <div class="cover-cta">
+          <a class="btn primary" href="#slide-1">Start the story →</a>
+          <a class="btn ghost" href="#slide-6">Jump to demo</a>
+        </div>
+        <ul class="cover-meta">
+          <li><span>Format</span><strong>One-day prototype</strong></li>
+          <li><span>Surface</span><strong>Claude Co-Work plugin</strong></li>
+          <li><span>Audience</span><strong>DO founder ICP</strong></li>
+          <li><span>Adjacent to</span><strong>DO CSPM</strong></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1. FOUNDER PROBLEM -->
+  <section class="slide" id="slide-1" data-title="Founder problem" aria-labelledby="s1-h">
+    <header class="slide-head">
+      <span class="kicker">01 · Founder problem</span>
+      <h2 id="s1-h">A two-person WordPress consultancy gets a 90-day ISO 27001 demand.</h2>
+    </header>
+
+    <div class="two-col">
+      <div class="card">
+        <h3>The customer I keep coming back to</h3>
+        <p>Two people. Ten client sites. <strong>One Droplet.</strong> Not a security team. Not an enterprise buyer. They chose DigitalOcean because it was simple, affordable, fast.</p>
+        <p>Then their biggest client updates the renewal contract:</p>
+        <blockquote>“We need ISO 27001 readiness in ninety days, or we can’t sign.”</blockquote>
+        <p>They didn’t buy DO for compliance. But now compliance is what determines whether they stay on DO.</p>
+      </div>
+
+      <div class="card accent">
+        <h3>Three bad options today</h3>
+        <ol class="numlist">
+          <li>Hire a compliance consultant they can’t afford.</li>
+          <li>Interpret ISO language themselves and lose weeks.</li>
+          <li>Migrate to a platform that looks more enterprise-ready — even though they didn’t want the complexity.</li>
+        </ol>
+        <p class="landing-phrase">The product isn’t certification. It’s <strong>the bridge from panic to a credible client response.</strong></p>
+      </div>
+    </div>
+
+    <details class="note">
+      <summary>Speaker note · why this customer</summary>
+      <p>This is mass-market DigitalOcean — real budget pressure, real client demand, no security staff. If DO doesn’t help them through that moment, someone else will, and they migrate. The retention math is the product.</p>
+    </details>
+  </section>
+
+  <!-- 2. WHY DO SHOULD CARE -->
+  <section class="slide" id="slide-2" data-title="Why DO cares" aria-labelledby="s2-h">
+    <header class="slide-head">
+      <span class="kicker">02 · Why DigitalOcean should care</span>
+      <h2 id="s2-h">This is a retention moment masquerading as a compliance task.</h2>
+    </header>
+
+    <div class="metric-row">
+      <div class="metric">
+        <span class="metric-label">Retention trigger</span>
+        <strong class="metric-value">Client contract</strong>
+        <span class="metric-sub">renewal blocked on framework readiness</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Consultant-led ISO 27001 cost — SMB</span>
+        <strong class="metric-value">£10k–£20k</strong>
+        <span class="metric-sub">small/medium business range, per <a href="https://hightable.io/iso-27001-costs-small-medium-business/" target="_blank" rel="noopener">Hightable</a></span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Full consultant-led support</span>
+        <strong class="metric-value">$30k–$50k</strong>
+        <span class="metric-sub">per <a href="https://www.isms.online/iso-27001/consultants/cost/" target="_blank" rel="noopener">ISMS.online</a></span>
+      </div>
+    </div>
+
+    <div class="two-col tight">
+      <div class="card">
+        <h3>The framing</h3>
+        <p>The plugin doesn’t promise certification. It helps the customer <strong>deflect the first expensive consultant call</strong> and reduce the need for immediate consultant-led triage — long enough to give a credible client response and keep building on DO.</p>
+        <p>Not “you’re ISO compliant.” Just: <em>here is your readiness posture against the evidence your client may ask for.</em></p>
+      </div>
+      <div class="card">
+        <h3>What DO actually gets</h3>
+        <ul class="checklist">
+          <li><strong>Retention</strong> of accounts at the contract-pressure moment</li>
+          <li><strong>Trust</strong> deepened at the moment DO becomes business-critical</li>
+          <li><strong>Loyalty loop</strong> — small shops tell other small shops who helped them</li>
+          <li><strong>Brand fit</strong> — practical, clear, built for teams without dedicated security staff</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="footnote">Cost figures are reference points for the consultant-led path the plugin helps customers <em>delay or deflect</em> — not a guaranteed saving.</p>
+  </section>
+
+  <!-- 3. CSPM TIE-IN -->
+  <section class="slide" id="slide-3" data-title="DO CSPM tie-in" aria-labelledby="s3-h">
+    <header class="slide-head">
+      <span class="kicker">03 · Complementary, not competitive</span>
+      <h2 id="s3-h">DO CSPM tells customers what’s misconfigured today. This plugin tells them whether their architecture meets the controls auditors will check tomorrow.</h2>
+    </header>
+
+    <div class="compare">
+      <table>
+        <thead>
+          <tr>
+            <th>Dimension</th>
+            <th>DO CSPM</th>
+            <th>security-compliance plugin</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><th>Layer</th><td>Runtime posture</td><td>Design-time architecture compliance</td></tr>
+          <tr><th>Input</th><td>Live DO resources</td><td>Architecture description</td></tr>
+          <tr><th>Output</th><td>Misconfiguration findings &amp; remediation</td><td>Framework gap report (SOC 2, ISO 27001, GDPR, DORA, NIST 800-53)</td></tr>
+          <tr><th>Cadence</th><td>Continuous scan</td><td>~90-second point-in-time assessment</td></tr>
+          <tr><th>Question answered</th><td>Is my live DO infra configured securely?</td><td>Does my architecture meet the controls auditors will check?</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="two-col tight">
+      <div class="card">
+        <h3>The one-liner</h3>
+        <p>“CSPM tells you what’s misconfigured today on DO. My plugin tells you whether your architecture even meets the controls auditors will check tomorrow. Same trust narrative, different layers.”</p>
+      </div>
+      <div class="card">
+        <h3>Why it sits above CSPM, not against it</h3>
+        <p>DO’s <a href="https://www.digitalocean.com/blog/now-available-cloud-security-posture-management" target="_blank" rel="noopener">CSPM launch announcement</a> shows the right DNA for runtime — agentless, AI-assisted, in-dashboard. See also the <a href="https://www.digitalocean.com/products/cloud-security-posture-management" target="_blank" rel="noopener">CSPM product page</a> and <a href="https://docs.digitalocean.com/products/cspm/" target="_blank" rel="noopener">CSPM docs</a>. The framework-compliance layer sits naturally above that, not against it.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. SOLUTION -->
+  <section class="slide" id="slide-4" data-title="Solution" aria-labelledby="s4-h">
+    <header class="slide-head">
+      <span class="kicker">04 · Solution surface</span>
+      <h2 id="s4-h">One plugin. Four slash commands, a guidance skill, a security-auditor subagent.</h2>
+    </header>
+
+    <div class="surface-grid">
+      <div class="surface-card">
+        <span class="tag">slash command</span>
+        <h3>/compliance-check</h3>
+        <p>Phased applicability → control map → gap analysis → roadmap → evidence ledger → leadership-ready summary.</p>
+      </div>
+      <div class="surface-card">
+        <span class="tag">slash command</span>
+        <h3>/spot-check</h3>
+        <p>Targeted scan for one control or framework concern — 90 seconds, no project setup.</p>
+      </div>
+      <div class="surface-card">
+        <span class="tag">slash command</span>
+        <h3>/edit-docx</h3>
+        <p>Applies tracked-change edits to a Word document — useful for policy templates and client responses.</p>
+      </div>
+      <div class="surface-card">
+        <span class="tag">slash command</span>
+        <h3>/compliance-eval</h3>
+        <p>Runs the evaluation harness against a configured suite. Catches regression in framework reasoning.</p>
+      </div>
+      <div class="surface-card alt">
+        <span class="tag">skill</span>
+        <h3>compliance-guidance</h3>
+        <p>Auto-loaded when the model reasons about compliance scope. Keeps the promise narrow.</p>
+      </div>
+      <div class="surface-card alt">
+        <span class="tag">subagent</span>
+        <h3>security-auditor</h3>
+        <p>Identity-architecture / compliance auditor: IAM, CIAM, RBAC, workload identity.</p>
+      </div>
+    </div>
+
+    <p class="solution-summary">Turns an <em>architecture description</em> into applicability, control mapping, gap analysis, roadmap, evidence ledger, and a leadership-ready summary — without certifying anything.</p>
+  </section>
+
+  <!-- 5. INSTALL -->
+  <section class="slide" id="slide-5" data-title="How to install" aria-labelledby="s5-h">
+    <header class="slide-head">
+      <span class="kicker">05 · How to use / install</span>
+      <h2 id="s5-h">Manual upload to a Claude Co-Work org marketplace.</h2>
+    </header>
+
+    <div class="install-grid">
+      <ol class="install-checklist" aria-label="Install checklist">
+        <li><span>Pre</span><div><strong>Team or Enterprise Claude plan</strong><br/><em>Co-Work + Skills enabled · Owner or Primary Owner · Claude Desktop</em></div></li>
+        <li><span>A1</span><div><strong>Ask Claude to zip the plugin</strong><br/><em>or download <a href="assets/security-compliance-plugin.zip" download>security-compliance-plugin.zip</a> from this page</em></div></li>
+        <li><span>A2</span><div><strong>Org settings → Plugins</strong><br/><em>Claude Desktop · workspace menu · sidebar</em></div></li>
+        <li><span>A3</span><div><strong>Add plugins → Upload a file</strong><br/><em>create a marketplace (e.g. <code>security-plugins</code>)</em></div></li>
+        <li><span>A4</span><div><strong>Upload the .zip</strong><br/><em>manifest validates · commands/skill/subagent register</em></div></li>
+        <li><span>A5</span><div><strong>Set “Available for install”</strong><br/><em>while piloting · move to Installed-by-default once validated</em></div></li>
+        <li><span>B</span><div><strong>End user installs from Co-Work</strong><br/><em>type <code>/plugin</code> · pick <code>security-compliance</code> · run slash commands</em></div></li>
+      </ol>
+
+      <aside class="install-aside">
+        <h3>Download &amp; source</h3>
+        <a class="btn primary block" href="assets/security-compliance-plugin.zip" download>
+          ↓ Download for Claude Co-Work upload
+          <small>security-compliance-plugin.zip</small>
+        </a>
+        <a class="btn ghost block" href="https://github.com/sherryyuan678/ai-security-plugins/tree/main/plugins/security-compliance" target="_blank" rel="noopener">
+          View repo on GitHub ↗
+          <small>sherryyuan678 / ai-security-plugins · plugins/security-compliance</small>
+        </a>
+        <p class="aside-note">Manifest at <code>.claude-plugin/plugin.json</code> sits at the root of the archive so Co-Work registers commands, skill, and subagent on upload.</p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- 6. DEMO -->
+  <section class="slide" id="slide-6" data-title="Demo" aria-labelledby="s6-h">
+    <header class="slide-head">
+      <span class="kicker">06 · Demo</span>
+      <h2 id="s6-h">Spot-check, in the wild.</h2>
+    </header>
+
+    <div class="demo-grid">
+      <figure class="video-wrap">
+        <video controls preload="metadata" playsinline poster="">
+          <source src="assets/demo-spot-check-web.mp4" type="video/mp4" />
+          Your browser does not support embedded video. <a href="assets/demo-spot-check-web.mp4">Download the demo</a>.
+        </video>
+        <figcaption>spot-check running inside Claude Co-Work — single question, point-in-time framework reasoning.</figcaption>
+      </figure>
+
+      <div class="commands">
+        <h3>Sample commands from the install guide</h3>
+        <pre class="cmd"><code>/security-compliance:compliance-check Stripe-style payments API serving EU + US merchants. --jurisdictions EU,US --industry fintech --strict-facts</code></pre>
+        <pre class="cmd"><code>/security-compliance:spot-check Are 5-minute OIDC workload tokens enough to satisfy DORA Art. 9(4)(c) strong authentication for ICT services?</code></pre>
+        <p class="cmd-note">Outputs land in <code>.compliance-check/</code> — applicability, control map, gap analysis, roadmap, evidence ledger, and a one-page leadership summary (<code>09-summary.docx</code>).</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. VALIDATION / METRICS -->
+  <section class="slide" id="slide-7" data-title="Validation & metrics" aria-labelledby="s7-h">
+    <header class="slide-head">
+      <span class="kicker">07 · Validation &amp; metrics</span>
+      <h2 id="s7-h">Measure behavior change, not reports generated.</h2>
+    </header>
+
+    <div class="metrics-grid">
+      <div class="metric-card star">
+        <span class="metric-label">North star</span>
+        <strong>Retention of accounts at a compliance-triggered moment</strong>
+        <p>Did the customer stay on DO when a client framework demand showed up, or did they migrate?</p>
+      </div>
+      <div class="metric-card">
+        <span class="metric-label">Leading · activation</span>
+        <strong>Plugin installed → first scan completed → client-facing response generated</strong>
+        <p>Funnel from install to a deliverable the customer can actually send.</p>
+      </div>
+      <div class="metric-card">
+        <span class="metric-label">Leading · behavior change</span>
+        <strong>MFA on · access tightened · backups configured · stale users removed · access-review documented</strong>
+        <p>Account-level changes after a scan — the real signal the customer acted on the gap analysis.</p>
+      </div>
+      <div class="metric-card vanity">
+        <span class="metric-label">Vanity output</span>
+        <strong>Reports generated</strong>
+        <p>Looks good in a deck. Doesn’t prove a customer stayed, paid, or changed anything. Tracked, not optimized for.</p>
+      </div>
+    </div>
+
+    <p class="footnote">Engineered cuts, not residual: full compliance management is out of scope by design. The product owns one moment — the contract-pressure trigger.</p>
+  </section>
+
+  <!-- 8. ITERATION / WHY NOW -->
+  <section class="slide" id="slide-8" data-title="Iteration · Why now" aria-labelledby="s8-h">
+    <header class="slide-head">
+      <span class="kicker">08 · Iteration loop · why now</span>
+      <h2 id="s8-h">From founder pain to an installable Co-Work package, in five passes.</h2>
+    </header>
+
+    <ol class="timeline">
+      <li><span>1</span><div><strong>Founder pain</strong><p>Two-person shop, ten sites, one Droplet, 90-day ISO ask. Real customer, not an enterprise hypothesis.</p></div></li>
+      <li><span>2</span><div><strong>Narrow trigger</strong><p>Lock the promise to one moment: customer-facing contract pressure. Engineered cuts, not residual.</p></div></li>
+      <li><span>3</span><div><strong>Plugin capability</strong><p>compliance-check, spot-check, edit-docx, compliance-eval + compliance-guidance skill + security-auditor subagent.</p></div></li>
+      <li><span>4</span><div><strong>Installable Co-Work package</strong><p>Manifest at the root, manual-upload .zip, marketplace install preference — real distribution surface.</p></div></li>
+      <li><span>5</span><div><strong>Demo &amp; eval harness</strong><p>Spot-check video + /compliance-eval suite to catch regression in framework reasoning.</p></div></li>
+    </ol>
+
+    <div class="card whynow">
+      <h3>Why now</h3>
+      <p>DigitalOcean is already moving toward agentless, AI-assisted, in-dashboard security with <a href="https://www.digitalocean.com/blog/now-available-cloud-security-posture-management" target="_blank" rel="noopener">CSPM GA</a> and the Security Advisor layer (<a href="https://www.digitalocean.com/products/cloud-security-posture-management" target="_blank" rel="noopener">product</a> · <a href="https://docs.digitalocean.com/products/cspm/" target="_blank" rel="noopener">docs</a>). This prototype shows a complementary <strong>design-time / framework-compliance</strong> layer that sits above runtime posture — same trust narrative, different altitude.</p>
+    </div>
+  </section>
+
+  <!-- 9. CLOSING / ASK -->
+  <section class="slide closing" id="slide-9" data-title="Ask" aria-labelledby="s9-h">
+    <header class="slide-head">
+      <span class="kicker">09 · The ask</span>
+      <h2 id="s9-h">I built this to show how I’d think as the IAM / RBAC PM.</h2>
+    </header>
+
+    <div class="closing-grid">
+      <div class="card closing-card">
+        <ul class="bullets">
+          <li>Identify the <strong>retention moment</strong> — not the abstract feature.</li>
+          <li><strong>Constrain the promise</strong> — engineered cuts, not residual.</li>
+          <li><strong>Ship a working loop</strong> — install path, slash commands, eval harness.</li>
+          <li><strong>Measure behavior change</strong> — not reports generated.</li>
+        </ul>
+      </div>
+
+      <div class="cta-stack">
+        <a class="btn primary block" href="#slide-6">▶ Watch the demo</a>
+        <a class="btn ghost block" href="assets/security-compliance-plugin.zip" download>↓ Download plugin .zip</a>
+        <a class="btn ghost block" href="https://github.com/sherryyuan678/ai-security-plugins/tree/main/plugins/security-compliance" target="_blank" rel="noopener">View repo on GitHub ↗</a>
+      </div>
+    </div>
+
+    <footer class="end-footer">
+      <span>Built by Sherry Yuan · one-day prototype for the DigitalOcean Director of PM conversation.</span>
+      <span>Sources: <a href="https://www.digitalocean.com/blog/now-available-cloud-security-posture-management" target="_blank" rel="noopener">DO CSPM launch</a> · <a href="https://www.digitalocean.com/products/cloud-security-posture-management" target="_blank" rel="noopener">DO CSPM product</a> · <a href="https://docs.digitalocean.com/products/cspm/" target="_blank" rel="noopener">DO CSPM docs</a> · <a href="https://hightable.io/iso-27001-costs-small-medium-business/" target="_blank" rel="noopener">Hightable</a> · <a href="https://www.isms.online/iso-27001/consultants/cost/" target="_blank" rel="noopener">ISMS.online</a></span>
+    </footer>
+  </section>
+
+</main>
+
+<div class="deckbar" role="region" aria-label="Deck controls">
+  <button class="ctrl" id="prevBtn" aria-label="Previous slide">←</button>
+  <div class="progress" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
+  <span class="count" id="slideCount" aria-live="polite">1 / 10</span>
+  <button class="ctrl" id="nextBtn" aria-label="Next slide">→</button>
+</div>
+
+<script src="script.js" defer></script>
+<script data-pplx-inline-edit>
+(function () {
+  if (window === window.top) return;
+
+  const allowedParentOrigins = ["https://www.perplexity.ai","https://perplexity.ai","https://testing.perplexity.ai","https://staging.perplexity.ai","https://*.preview.i.perplexity.ai","http://localhost:3000","http://127.0.0.1:3000","http://localhost:5173","http://127.0.0.1:5173"];
+  const MAX_FONT_BYTES = 500 * 1024;
+  const MAX_TOTAL_FONT_BYTES = 2 * 1024 * 1024;
+  let scrollForwarding = false;
+  let scrollRaf = 0;
+  let trustedTopOrigin = null;
+
+  // Allow entries like "https://*.preview.i.perplexity.ai" — the wildcard
+  // matches a single DNS label (no dots), so "https://*.foo" cannot stretch
+  // across multiple labels.
+  function matchesAllowedOrigin(origin) {
+    if (!origin) return false;
+    for (const entry of allowedParentOrigins) {
+      if (!entry.includes("*")) {
+        if (entry === origin) return true;
+        continue;
+      }
+      const pattern = new RegExp(
+        "^" +
+          entry.replace(/[.+?^${}()|[\]\\]/g, "\\$&").replace(/\*/g, "[^.]+") +
+          "$",
+      );
+      if (pattern.test(origin)) return true;
+    }
+    return false;
+  }
+
+  // Trust decision: when the sender is same-origin-visible (event.origin is a
+  // real origin like https://www.perplexity.ai) we trust event.origin directly.
+  // When event.origin is "null" (opaque broker srcdoc), we fall back to the
+  // broker's stamped `parentOrigin` to identify the top window. The fallback
+  // is claim-only — we rely on the browser's native `targetOrigin` enforcement
+  // on the response path (see postToTrustedTop) to ensure replies can't be
+  // delivered to anyone but the actual top window of that claimed origin.
+  function getTrustedParentOrigin(event) {
+    const forwardedParentOrigin =
+      typeof event.data.parentOrigin === "string" ? event.data.parentOrigin : null;
+    const parentOrigin = event.origin === "null" ? forwardedParentOrigin : event.origin;
+    return matchesAllowedOrigin(parentOrigin) ? parentOrigin : null;
+  }
+
+  // All responses go to window.top with targetOrigin = the allowlisted origin.
+  // An attacker that iframes us inside their own null-origin broker can claim
+  // any parentOrigin they like, but the browser will drop the reply whenever
+  // the real top's origin doesn't match — so the screenshot never leaves.
+  function postToTrustedTop(message) {
+    if (!trustedTopOrigin) return;
+    try {
+      window.top.postMessage(message, trustedTopOrigin);
+    } catch (_error) {}
+  }
+
+  function inlineAll(original, clone) {
+    if (original.nodeType !== 1 || clone.nodeType !== 1) return;
+
+    try {
+      const computedStyle = getComputedStyle(original);
+      // cssText on a computed style is the serialized declaration in modern
+      // Chromium/Safari — a single read beats enumerating ~400 longhand
+      // properties. Firefox returns "" here, so we fall back on empty.
+      const serialized = computedStyle.cssText;
+      if (serialized) {
+        clone.style.cssText = serialized;
+      } else {
+        const parts = new Array(computedStyle.length);
+        for (let index = 0; index < computedStyle.length; index += 1) {
+          const property = computedStyle[index];
+          parts[index] = `${property}:${computedStyle.getPropertyValue(property)};`;
+        }
+        clone.style.cssText = parts.join("");
+      }
+    } catch (_error) {}
+
+    const originalChildren = original.children;
+    const clonedChildren = clone.children;
+    for (
+      let index = 0;
+      index < originalChildren.length && index < clonedChildren.length;
+      index += 1
+    ) {
+      inlineAll(originalChildren[index], clonedChildren[index]);
+    }
+  }
+
+  function extractFontUrl(srcValue) {
+    const matches = [
+      ...srcValue.matchAll(
+        /url\(["']?([^"')]+)["']?\)(?:\s*format\(["']?([^"')]+)["']?\))?/gi,
+      ),
+    ];
+    if (matches.length === 0) return null;
+    const woff2 = matches.find((m) => m[2] && m[2].toLowerCase().includes("woff2"));
+    if (woff2) return woff2[1];
+    const woff = matches.find((m) => m[2] && m[2].toLowerCase().includes("woff"));
+    if (woff) return woff[1];
+    return matches[0][1];
+  }
+
+  // Cache resolved font URL -> data URI across captures. Fonts on a page
+  // essentially never change, and a batch run emits multiple captures back to
+  // back — without this we'd refetch + re-base64 every time.
+  const fontDataUriCache = new Map();
+  const SRC_DECLARATION_RE = /src\s*:\s*[^;}]+/i;
+
+  async function fetchAsDataUri(url) {
+    if (fontDataUriCache.has(url)) return fontDataUriCache.get(url);
+    let dataUri = null;
+    try {
+      const response = await fetch(url, { mode: "cors", credentials: "omit" });
+      if (response.ok) {
+        const blob = await response.blob();
+        if (blob.size <= MAX_FONT_BYTES) {
+          dataUri = await new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () =>
+              resolve(typeof reader.result === "string" ? reader.result : null);
+            reader.onerror = () => resolve(null);
+            reader.readAsDataURL(blob);
+          });
+        }
+      }
+    } catch (_error) {
+      dataUri = null;
+    }
+    fontDataUriCache.set(url, dataUri);
+    return dataUri;
+  }
+
+  function collectFontFaceRuleTexts() {
+    const rules = [];
+    for (const sheet of document.styleSheets) {
+      let cssRules;
+      try {
+        cssRules = sheet.cssRules;
+      } catch (_error) {
+        continue;
+      }
+      if (!cssRules) continue;
+      for (const rule of cssRules) {
+        const cssText = rule.cssText || "";
+        if (cssText.startsWith("@font-face")) rules.push(cssText);
+      }
+    }
+    return rules;
+  }
+
+  async function buildInlinedFontCss() {
+    const ruleTexts = collectFontFaceRuleTexts();
+    if (ruleTexts.length === 0) return null;
+
+    const resolved = ruleTexts.map((cssText) => {
+      if (!SRC_DECLARATION_RE.test(cssText)) return null;
+      const srcMatch = cssText.match(/src\s*:\s*([^;}]+)[;}]/i);
+      if (!srcMatch) return null;
+      const url = extractFontUrl(srcMatch[1]);
+      if (!url) return null;
+      try {
+        return { cssText, url: new URL(url, document.baseURI).href };
+      } catch (_error) {
+        return null;
+      }
+    });
+
+    const dataUris = await Promise.all(
+      resolved.map((entry) => (entry ? fetchAsDataUri(entry.url) : Promise.resolve(null))),
+    );
+
+    const inlined = [];
+    let totalBytes = 0;
+    for (let index = 0; index < resolved.length; index += 1) {
+      const entry = resolved[index];
+      const dataUri = dataUris[index];
+      if (!entry || !dataUri) continue;
+      const approxBytes = dataUri.length * 0.75;
+      if (totalBytes + approxBytes > MAX_TOTAL_FONT_BYTES) break;
+      totalBytes += approxBytes;
+      inlined.push(entry.cssText.replace(SRC_DECLARATION_RE, `src: url("${dataUri}")`));
+    }
+    return inlined.length > 0 ? inlined.join("\n") : null;
+  }
+
+  function stripExternal(clone) {
+    const images = clone.querySelectorAll("img");
+    for (let index = 0; index < images.length; index += 1) {
+      const src = images[index].getAttribute("src");
+      if (src && !src.startsWith("data:")) images[index].removeAttribute("src");
+    }
+
+    const elements = clone.querySelectorAll("*");
+    for (let index = 0; index < elements.length; index += 1) {
+      const style = elements[index].style.cssText;
+      if (style && style.includes("url(")) {
+        elements[index].style.cssText = style.replace(
+          /url\(["']?(?!data:)[^)"']*["']?\)/gi,
+          "none",
+        );
+      }
+    }
+  }
+
+  function emitScroll() {
+    scrollRaf = 0;
+    if (!scrollForwarding) return;
+    postToTrustedTop({
+      type: "INLINE_EDIT_SCROLL",
+      scrollX: window.scrollX,
+      scrollY: window.scrollY,
+    });
+  }
+
+  window.addEventListener(
+    "scroll",
+    function () {
+      if (!scrollForwarding || scrollRaf) return;
+      scrollRaf = requestAnimationFrame(emitScroll);
+    },
+    { passive: true, capture: true },
+  );
+
+  async function handleCaptureRequest(event) {
+    const requestId = event.data.requestId;
+    const scrollX = window.scrollX;
+    const scrollY = window.scrollY;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    function postResult(dataUrl) {
+      postToTrustedTop({
+        type: "INLINE_EDIT_SCREENSHOT_RESULT",
+        requestId,
+        dataUrl,
+        scrollX,
+        scrollY,
+      });
+    }
+
+    try {
+      // Wait for any pending web fonts to resolve so both inline metrics and
+      // the @font-face inlining below see the same loaded faces.
+      if (document.fonts && document.fonts.ready) {
+        try {
+          await document.fonts.ready;
+        } catch (_error) {}
+      }
+
+      const clone = document.documentElement.cloneNode(true);
+      inlineAll(document.documentElement, clone);
+
+      const removedNodes = clone.querySelectorAll("script,link[rel=\"stylesheet\"],style");
+      for (let index = 0; index < removedNodes.length; index += 1) {
+        removedNodes[index].remove();
+      }
+
+      stripExternal(clone);
+
+      // Re-embed web fonts as data-URI @font-face rules so the SVG rasterizer
+      // can resolve them — external font URLs aren't fetched during
+      // foreignObject rendering, which would otherwise force a fallback face
+      // and change text metrics.
+      const inlinedFontCss = await buildInlinedFontCss();
+      if (inlinedFontCss) {
+        const styleEl = document.createElement("style");
+        styleEl.textContent = inlinedFontCss;
+        const head = clone.querySelector("head");
+        if (head) head.appendChild(styleEl);
+        else clone.insertBefore(styleEl, clone.firstChild);
+      }
+
+      const html = new XMLSerializer().serializeToString(clone);
+      const svg =
+        `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">` +
+        '<foreignObject width="100%" height="100%">' +
+        `<div xmlns="http://www.w3.org/1999/xhtml" style="width:${width}px;height:${height}px;overflow:hidden">` +
+        `<div style="transform:translate(-${scrollX}px,-${scrollY}px);transform-origin:top left">` +
+        html +
+        "</div></div></foreignObject></svg>";
+      const svgUrl = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+      const image = new Image();
+      image.onload = function () {
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        canvas.getContext("2d").drawImage(image, 0, 0);
+        postResult(canvas.toDataURL("image/png"));
+      };
+      image.onerror = function () {
+        postResult(null);
+      };
+      image.src = svgUrl;
+    } catch (_error) {
+      postResult(null);
+    }
+  }
+
+  window.addEventListener("message", function (event) {
+    if (!event.data) return;
+    // Only accept messages from the direct parent frame. Blocks sibling /
+    // unrelated-window postMessage senders that could otherwise reach us.
+    if (event.source !== window.parent) return;
+
+    const trustedParentOrigin = getTrustedParentOrigin(event);
+    if (!trustedParentOrigin) return;
+    trustedTopOrigin = trustedParentOrigin;
+
+    if (event.data.type === "INLINE_EDIT_SCROLL_START") {
+      scrollForwarding = true;
+      emitScroll();
+      return;
+    }
+
+    if (event.data.type === "INLINE_EDIT_SCROLL_STOP") {
+      scrollForwarding = false;
+      if (scrollRaf) cancelAnimationFrame(scrollRaf);
+      scrollRaf = 0;
+      return;
+    }
+
+    if (event.data.type !== "INLINE_EDIT_CAPTURE_REQUEST") return;
+
+    handleCaptureRequest(event);
+  });
+})();
+
+
+</script></body>
+</html>
